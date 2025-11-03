@@ -3,4 +3,4 @@
 Author: {{cookiecutter.author_name}}
 Version: {{cookiecutter.version}}
 
-Description: {{cookiecutter.description}}
+Description: {{cookiecutter.project_description}}
