@@ -5,7 +5,7 @@
     "project_description":"Structural calculations as per NSCP 2015.",
     "include_streamlit_config":"y",
     "include_streamlit_secrets":"y",
-    "include_pages_folder_for_multi_page_app":"y",
+    "include_pages_folder_for_multi_page_app":"n",
     "include_tests":"y",
     "include_src_directory":"y"
 }
