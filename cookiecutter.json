@@ -7,5 +7,6 @@
     "include_streamlit_secrets":"y",
     "include_pages_folder_for_multi_page_app":"n",
     "include_tests":"y",
-    "include_src_directory":"y"
+    "include_src_directory":"y",
+    "version": "0.1.0"
 }
