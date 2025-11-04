@@ -1,4 +1,5 @@
 import streamlit as st
 
 def display():
-    st.title("Wind Others")
+    st.title("Bolted Splice")
+    
