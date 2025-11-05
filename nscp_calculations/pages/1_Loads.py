@@ -1,5 +1,6 @@
 import streamlit as st
 from src.loads import dead_load, live_load, wind_load, seismc_load
+from src.calculations.simple_maths import add, multiply
 
 # Page configuration
 st.set_page_config(layout="wide")
@@ -33,7 +34,7 @@ with col6:
 
 # --- CALCULATION ---
 if st.button("Calculate Total Load"):
-    total_load = (dead_load_input * dead_factor_input) + (live_load_input * live_factor_input) + (wind_load_input * wind_factor_input)
+    total_load = add(multiply(dead_load_input, dead_factor_input), multiply(live_load_input, live_factor_input), multiply(wind_load_input, wind_factor_input))
 
     st.success(f"**Total Design Load = {total_load:.2f} kN/m²**")
 
