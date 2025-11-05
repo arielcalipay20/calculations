@@ -2,7 +2,7 @@ import streamlit as st
 from src.loads.wind import wind_directional, wind_envelope, wind_others
 
 def display_tabs():
-    st.title("Wind Load")
+    st.header("Wind Load")
     
     tab1, tab2, tab3 = st.tabs(["Direction Procedure", "Envelope Procedure", "Other Wind"])
     
