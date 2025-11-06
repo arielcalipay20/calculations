@@ -5,7 +5,7 @@ from src.calculations.simple_maths import add, multiply
 # Page configuration
 st.set_page_config(layout="wide")
 
-st.title("Loads")
+st.title("Loads Page")
 
 # --- INPUT SECTION ---
 col1, col2, col3 = st.columns(3)
