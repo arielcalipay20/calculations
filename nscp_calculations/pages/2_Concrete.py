@@ -4,10 +4,10 @@ from src.concrete import rc_anchorage, rc_beam, rc_beamcolumnjoint, rc_column, r
 # Page Configuration
 st.set_page_config(layout="wide")
 
-st.title("Concrete")
+st.title("Structural Concrete")
 
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(
-    ["RC Anchorage", "RC Beam", "RC Beam Column Joint", "RC Column", "RC Footing", "RC One Ways Lab", "RC Pile Cap", "RC Two Ways Lab", "RC Walls"]
+    ["RC Anchorage", "RC Beam", "RC Beam Column Joint", "RC Column", "RC Footing", "RC One Way SLab", "RC Pile Cap", "RC Two Way SLab", "RC Walls"]
     )
 
 with tab1:
