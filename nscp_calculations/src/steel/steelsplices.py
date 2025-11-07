@@ -2,7 +2,7 @@ import streamlit as st
 from src.steel.steelsplices_tabs import bolted_splice, welded_splice
 
 def display_tabs():
-    st.title("Steel Splices")
+    st.header("Steel Splices")
     
     tab1, tab2 = st.tabs(["Bolted Splice","Welded Splice"])
 

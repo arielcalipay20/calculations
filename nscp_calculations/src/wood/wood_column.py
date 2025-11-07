@@ -3,7 +3,7 @@ import pandas as pd
 import math
 
 def display():
-    st.header("🌲 Wood Column Design (NSCP 2015 Section 613)")
+    st.header("🌲 Wood Post Design (NSCP 2015 Section 613)")
 
     st.markdown(r"""
     This module calculates **axial capacity, slenderness, and bending interaction**  
@@ -33,7 +33,7 @@ def display():
     # ----------------------------
     # CALCULATIONS
     # ----------------------------
-    st.subheader("Design Calculations")
+    # st.subheader("Design Calculations")
 
     # Convert units
     b = width / 1000  # m

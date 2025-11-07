@@ -5,7 +5,7 @@ import math
 def display():
     st.header("🌲 Wood Beam Design (NSCP 2015 Section 611)")
 
-    st.markdown("""
+    st.markdown(r"""
     This tool computes **bending, shear, and deflection checks** for wood beams 
     based on **NSCP 2015 – Section 611 (Design of Wood Structures)**, 
     referencing NDS provisions for allowable stresses and serviceability limits.

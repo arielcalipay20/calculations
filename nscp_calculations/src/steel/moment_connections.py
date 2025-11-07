@@ -2,7 +2,7 @@ import streamlit as st
 from src.steel.moment_connections_tabs import bolted, welded
 
 def display_tabs():
-    st.title("Moment Connections")
+    st.header("Moment Connections")
     
     tab1, tab2 = st.tabs(["Bolted", "Welded"])
     
