@@ -6,7 +6,7 @@ st.set_page_config(layout="wide")
 
 st.title("Wood")
 
-tab1, tab2, tab3 = st.tabs(["Wood Beam", "Wood Column", "Wood Flooring"])
+tab1, tab2, tab3 = st.tabs(["Wood Beam", "Wood Post", "Wood Flooring"])
 
 with tab1:
     wood_beam.display()

@@ -38,8 +38,8 @@ def display():
         CM = st.number_input("Wet Service Factor, C_M", min_value=0.5, value=1.0, step=0.01, key="wfloor_CM")
         Cr = st.number_input("Repetitive Member Factor, C_r", min_value=0.5, value=1.15, step=0.01, key="wfloor_Cr")
 
-    st.markdown("---")
-    st.markdown("### Calculations")
+    # st.markdown("---")
+    # st.markdown("### Calculations")
 
     # Derived geometry
     b = width_joist / 1000.0  # m

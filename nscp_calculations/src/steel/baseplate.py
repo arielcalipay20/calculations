@@ -2,9 +2,9 @@ import streamlit as st
 from src.steel.baseplate_tabs import baseplate_moment, baseplate_pinned
 
 def display_tabs():
-    st.title("Base Plate")
+    st.header("Baseplate Connection")
     
-    tab1, tab2 = st.tabs(["Base Plate Moment", "Base Plate Pinned"])
+    tab1, tab2 = st.tabs(["Baseplate Moment", "Baseplate Pinned"])
     
     with tab1:
         baseplate_moment.display()
