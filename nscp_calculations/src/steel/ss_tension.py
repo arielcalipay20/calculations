@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def display():
-    st.header("Structural Steel Tension Member Design (NSCP 2015)")
+    st.header("🛠️ Structural Steel Tension Member Design (NSCP 2015)")
 
     st.markdown(r"""
     ### Overview  

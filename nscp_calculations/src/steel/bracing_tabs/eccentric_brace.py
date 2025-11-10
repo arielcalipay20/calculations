@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def display():
-    st.header("Eccentric Brace Connection Design (NSCP 2015 / AISC 360-10)")
+    st.header("🦾 Eccentric Brace Connection Design (NSCP 2015 / AISC 360-10)")
 
     # -----------------------------
     # INPUT PARAMETERS
