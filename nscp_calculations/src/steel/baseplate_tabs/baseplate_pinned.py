@@ -3,7 +3,7 @@ import pandas as pd
 import math
 
 def display():
-    st.header("Base Plate Pinned Connection Design (NSCP 2015)")
+    st.header("🟩 Base Plate Pinned Connection Design (NSCP 2015)")
 
     st.markdown(r"""
     ### Overview  

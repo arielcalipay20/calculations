@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 st.title("Structural Steel")
 
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(
-    ["Baseplate", "Bracing", "Moment Connections", "Single Connections", "SS Beam", "SS Column", "SS Purlins", "SS Tension", "Steel Splices"]
+    ["Baseplate", "Bracing", "Moment Connections", "Simple Connections", "SS Beam", "SS Column", "SS Purlins", "SS Tension", "Steel Splices"]
     )
 
 with tab1: 

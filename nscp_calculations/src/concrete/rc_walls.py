@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def display():
-    st.header("Reinforced Concrete Wall Design (NSCP Section 418)")
+    st.header("🧱 Reinforced Concrete Wall Design (NSCP Section 418)")
 
     st.markdown("### Input Parameters")
 
