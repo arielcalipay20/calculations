@@ -4,3 +4,6 @@ pandas
 matplotlib
 seaborn
 plotly
+mysql-connector-python
+python-dotenv
+extra-streamlit-components
