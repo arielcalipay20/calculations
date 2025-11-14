@@ -107,7 +107,8 @@ else:
             # Create DB session + cookie
             tok = create_session(user_id=user["id"])
             cm.set("nscp_auth_token", tok, max_age=60 * 60 * 24 * 7, path="/")
-            cm.save() 
+            # cm.save() 
+            time.sleep(0.5)
             st.rerun()
 
         else:
