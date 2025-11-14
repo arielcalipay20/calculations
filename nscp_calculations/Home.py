@@ -1,6 +1,7 @@
 # Home.py
 import streamlit as st
 import extra_streamlit_components as stx
+import time
 
 from src.functions.user_function import login_user
 from src.functions.sessions_mysql import create_session, get_session, destroy_session
@@ -8,25 +9,44 @@ from auth.Login import show_register
 
 st.set_page_config(layout="wide", page_title="NSCP Calculations")
 
-# ---- Initialize defaults ----
-st.session_state.setdefault("logged_in", False)
-st.session_state.setdefault("username", "")
-st.session_state.setdefault("user_id", None)
-
+# ---- Initialize Cookie Manager FIRST ----
 cm = stx.CookieManager()
 
-# --- Load token instantly ---
-token = cm.get("nscp_auth_token")
-st.write("Stored cookies:", cm.cookies)
-st.write("Fetched token:", token)
+# ---- Initialize session state defaults ----
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+if "user_id" not in st.session_state:
+    st.session_state.user_id = None
 
-# --- Restore login from DB session ---
-if token and not st.session_state.logged_in:
-    sess = get_session(token)
-    if sess:
-        st.session_state.logged_in = True
-        st.session_state.user_id = sess["user_id"]
-        st.session_state.username = sess["username"]
+# --- WAIT FOR COOKIES TO LOAD (prevents flickering) ---
+all_cookies = cm.cookies
+
+# Debug: Check what we have
+st.write("DEBUG - Cookies loaded:", all_cookies is not None)
+st.write("DEBUG - All cookies:", all_cookies)
+st.write("DEBUG - Current logged_in state:", st.session_state.logged_in)
+
+# If cookies aren't loaded yet, wait briefly
+if all_cookies is None:
+    st.write("DEBUG - Waiting for cookies...")
+    time.sleep(0.1)
+    st.rerun()
+
+# --- CHECK TOKEN AND RESTORE SESSION (if not already logged in) ---
+if not st.session_state.logged_in:
+    token = cm.get("nscp_auth_token")
+    st.write("DEBUG - Token found:", token)
+    
+    if token:
+        sess = get_session(token)
+        st.write("DEBUG - Session from DB:", sess)
+        if sess:
+            st.session_state.logged_in = True
+            st.session_state.user_id = sess["user_id"]
+            st.session_state.username = sess["username"]
+            st.write("DEBUG - Session restored!")
 
 # ======================================================
 #                 IF LOGGED IN → SHOW HOME
@@ -39,23 +59,19 @@ if st.session_state.logged_in:
     with st.sidebar:
         st.write(f"👤 {st.session_state.username}")
         if st.button("Logout"):
-
-            # Destroy DB session
+            # Get token before destroying
             token = cm.get("nscp_auth_token")
+            
+            # Destroy DB session
             if token:
                 destroy_session(token)
 
             # Delete cookie
-            # cm.set("nscp_auth_token", "", max_age=0, path="/")
-            # st.session_state.clear()
-            # st.session_state["logged_in"] = False
-            # st.rerun()
+            cm.delete("nscp_auth_token")
             
-            # Delete cookie 
-            cm.delete("nscp_auth_token") 
-            # cm.save() 
-            st.session_state.clear() 
-            st.session_state.update({ "logged_in": False, }) 
+            # Clear session state
+            st.session_state.clear()
+            
             st.rerun()
 
     st.stop()
@@ -91,7 +107,7 @@ else:
             # Create DB session + cookie
             tok = create_session(user_id=user["id"])
             cm.set("nscp_auth_token", tok, max_age=60 * 60 * 24 * 7, path="/")
-            cm.save()
+            cm.save() 
             st.rerun()
 
         else:
