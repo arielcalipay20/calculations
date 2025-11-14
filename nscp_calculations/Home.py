@@ -12,45 +12,17 @@ st.set_page_config(layout="wide", page_title="NSCP Calculations")
 st.session_state.setdefault("logged_in", False)
 st.session_state.setdefault("username", "")
 st.session_state.setdefault("user_id", None)
-st.session_state.setdefault("cookie_checked", False)
-st.session_state.setdefault("session_checked", False)
 
 cm = stx.CookieManager()
 
-if not st.session_state.get("cookie_checked", False):
-    st.session_state.cookie_checked = True
-    st.write("Loading cookies...")
-    st.stop()  # wait until cookies are ready
-
+# --- Load token instantly ---
 token = cm.get("nscp_auth_token")
+st.write("Stored cookies:", cm.cookies)
+st.write("Fetched token:", token)
 
-# Testing Purpose
-# st.write(token)
-# sess = get_session("0qTWUGUlWKGdMEFcE7KujnaZmC34OT1uhoKpr0dq3Ao")
-# if sess:
-#     st.write("✅ Session found!")
-#     st.json(sess)
-# else:
-#     st.write("❌ Session NOT found or expired")
-
-if token and not st.session_state.get("session_checked", False):
+# --- Restore login from DB session ---
+if token and not st.session_state.logged_in:
     sess = get_session(token)
-    if sess:
-        st.session_state.logged_in = True
-        st.session_state.user_id = sess["user_id"]
-        st.session_state.username = sess["username"]
-    st.session_state.session_checked = True
-
-# --- Prevent flicker / infinite loop ---
-if not st.session_state.cookie_checked:
-    st.session_state.cookie_checked = True
-    # Only rerun once to allow cookies to load
-    st.rerun()
-
-# --- Restore from DB session (only once) ---
-if token and not st.session_state.logged_in and not st.session_state.session_checked:
-    sess = get_session(token)
-    st.session_state.session_checked = True  # Avoid repeated DB lookups
     if sess:
         st.session_state.logged_in = True
         st.session_state.user_id = sess["user_id"]
@@ -61,44 +33,37 @@ if token and not st.session_state.logged_in and not st.session_state.session_che
 # ======================================================
 if st.session_state.logged_in:
 
-    # --------------- HOME CONTENT ----------------
     st.title("🏠 Home Dashboard")
     st.write(f"Welcome, **{st.session_state.username}**!")
 
     with st.sidebar:
         st.write(f"👤 {st.session_state.username}")
         if st.button("Logout"):
+
             # Destroy DB session
             token = cm.get("nscp_auth_token")
             if token:
                 destroy_session(token)
 
             # Delete cookie
-            try:
-                cm.delete("nscp_auth_token", path="/")
-            except KeyError:
-                pass
-
-            # Clear Streamlit session safely
-            cookie_checked = st.session_state.get("cookie_checked", True)
-            st.session_state.clear()
-            st.session_state.update({
-                "logged_in": False,
-                "cookie_checked": cookie_checked,
-                "session_checked": False
-            })
-
+            # cm.set("nscp_auth_token", "", max_age=0, path="/")
+            # st.session_state.clear()
+            # st.session_state["logged_in"] = False
+            # st.rerun()
+            
+            # Delete cookie 
+            cm.delete("nscp_auth_token") 
+            # cm.save() 
+            st.session_state.clear() 
+            st.session_state.update({ "logged_in": False, }) 
             st.rerun()
 
-    st.write("Your Home content goes here...")
-    st.write("Charts, tables, tools, etc.")
     st.stop()
 
 # ======================================================
 #              NOT LOGGED IN → SHOW AUTH
 # ======================================================
 
-# Hide sidebar navigation until login
 st.markdown("<style>[data-testid='stSidebarNav']{display:none;}</style>", unsafe_allow_html=True)
 
 st.title("🔐 NSCP Login")
@@ -118,15 +83,16 @@ else:
     if submitted:
         user = login_user(u, p)
         if user:
-            # Update session_state
+            # Update session
             st.session_state.logged_in = True
             st.session_state.username = user["username"]
             st.session_state.user_id = user["id"]
 
-            # Create DB-backed session + cookie
+            # Create DB session + cookie
             tok = create_session(user_id=user["id"])
             cm.set("nscp_auth_token", tok, max_age=60 * 60 * 24 * 7, path="/")
-
+            cm.save()
             st.rerun()
+
         else:
             st.error("Invalid username or password")
