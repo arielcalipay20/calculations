@@ -16,8 +16,8 @@ def _new_token() -> str:
 
 
 def _now():
-    """Return current UTC datetime with timezone info."""
-    return datetime.now(timezone.utc)
+    """Return current UTC datetime WITHOUT timezone info (naive) for MySQL compatibility."""
+    return datetime.utcnow()
 
 
 # ----------------- CRUD Functions -----------------
