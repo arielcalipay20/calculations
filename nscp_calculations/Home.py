@@ -41,7 +41,7 @@ if not st.session_state.logged_in:
     
     if token:
         sess = get_session(token)
-        st.write("DEBUG - Session from DB:", sess)
+        # st.write("DEBUG - Session from DB:", sess)
         if sess:
             st.session_state.logged_in = True
             st.session_state.user_id = sess["user_id"]
