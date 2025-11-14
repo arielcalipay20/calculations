@@ -24,9 +24,9 @@ if "user_id" not in st.session_state:
 all_cookies = cm.cookies
 
 # Debug: Check what we have
-st.write("DEBUG - Cookies loaded:", all_cookies is not None)
-st.write("DEBUG - All cookies:", all_cookies)
-st.write("DEBUG - Current logged_in state:", st.session_state.logged_in)
+# st.write("DEBUG - Cookies loaded:", all_cookies is not None)
+# st.write("DEBUG - All cookies:", all_cookies)
+# st.write("DEBUG - Current logged_in state:", st.session_state.logged_in)
 
 # If cookies aren't loaded yet, wait briefly
 if all_cookies is None:
@@ -37,7 +37,7 @@ if all_cookies is None:
 # --- CHECK TOKEN AND RESTORE SESSION (if not already logged in) ---
 if not st.session_state.logged_in:
     token = cm.get("nscp_auth_token")
-    st.write("DEBUG - Token found:", token)
+    # st.write("DEBUG - Token found:", token)
     
     if token:
         sess = get_session(token)
@@ -46,7 +46,7 @@ if not st.session_state.logged_in:
             st.session_state.logged_in = True
             st.session_state.user_id = sess["user_id"]
             st.session_state.username = sess["username"]
-            st.write("DEBUG - Session restored!")
+            # st.write("DEBUG - Session restored!")
 
 # ======================================================
 #                 IF LOGGED IN → SHOW HOME
