@@ -1,18 +1,24 @@
-# Home.py
+# Home.py (Router only - no UI)
+# Home.py (Router with debugging)
 import streamlit as st
 import extra_streamlit_components as stx
 import time
+from src.functions.sessions_mysql import get_session
 
-from src.functions.user_function import login_user
-from src.functions.sessions_mysql import create_session, get_session, destroy_session
-from auth.Login import show_register
+st.markdown("""
+        <style>
+        [data-testid="stSidebarNav"] li:first-child,
+        [data-testid="stSidebarNav"] li:last-child {
+            display: none;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
 st.set_page_config(layout="wide", page_title="NSCP Calculations")
 
-# ---- Initialize Cookie Manager FIRST ----
 cm = stx.CookieManager()
 
-# ---- Initialize session state defaults ----
+# Initialize session state
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
@@ -20,96 +26,77 @@ if "username" not in st.session_state:
 if "user_id" not in st.session_state:
     st.session_state.user_id = None
 
-# --- WAIT FOR COOKIES TO LOAD (prevents flickering) ---
+# DEBUG - Uncomment to see what's happening
+# st.write("DEBUG - Session State:", {
+#     "logged_in": st.session_state.logged_in,
+#     "username": st.session_state.username,
+#     "user_id": st.session_state.user_id
+# })
+
+# Wait for cookies
 all_cookies = cm.cookies
-
-# Debug: Check what we have
 # st.write("DEBUG - Cookies loaded:", all_cookies is not None)
-# st.write("DEBUG - All cookies:", all_cookies)
-# st.write("DEBUG - Current logged_in state:", st.session_state.logged_in)
 
-# If cookies aren't loaded yet, wait briefly
 if all_cookies is None:
-    st.write("DEBUG - Waiting for cookies...")
+    st.markdown("""
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h2>🔄 Loading...</h2>
+        </div>
+    """, unsafe_allow_html=True)
     time.sleep(0.1)
     st.rerun()
 
-# --- CHECK TOKEN AND RESTORE SESSION (if not already logged in) ---
+# Check session if not logged in
 if not st.session_state.logged_in:
+    st.markdown("""
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h2>🔄 Loading...</h2>
+        </div>
+    """, unsafe_allow_html=True)
     token = cm.get("nscp_auth_token")
-    # st.write("DEBUG - Token found:", token)
+    # st.write("DEBUG - Token from cookie:", token)
     
     if token:
         sess = get_session(token)
         # st.write("DEBUG - Session from DB:", sess)
+        
         if sess:
             st.session_state.logged_in = True
             st.session_state.user_id = sess["user_id"]
             st.session_state.username = sess["username"]
-            # st.write("DEBUG - Session restored!")
+            # st.write("DEBUG - Session restored, will rerun")
+            time.sleep(1)  # Give time to see the debug
+            st.rerun()
 
-# ======================================================
-#                 IF LOGGED IN → SHOW HOME
-# ======================================================
+# st.write("DEBUG - About to route...")
+# st.write("DEBUG - logged_in:", st.session_state.logged_in)
+
+# Route based on login status
 if st.session_state.logged_in:
-
-    st.title("🏠 Home Dashboard")
-    st.write(f"Welcome, **{st.session_state.username}**!")
-
-    with st.sidebar:
-        st.write(f"👤 {st.session_state.username}")
-        if st.button("Logout"):
-            # Get token before destroying
-            token = cm.get("nscp_auth_token")
-            
-            # Destroy DB session
-            if token:
-                destroy_session(token)
-
-            # Delete cookie
-            cm.delete("nscp_auth_token")
-            
-            # Clear session state
-            st.session_state.clear()
-            
-            st.rerun()
-
-    st.stop()
-
-# ======================================================
-#              NOT LOGGED IN → SHOW AUTH
-# ======================================================
-
-st.markdown("<style>[data-testid='stSidebarNav']{display:none;}</style>", unsafe_allow_html=True)
-
-st.title("🔐 NSCP Login")
-
-choice = st.sidebar.selectbox("Account", ["Login", "Register"], key="auth_menu")
-
-if choice == "Register":
-    show_register()
-
+    # Redirect to last page or default dashboard
+    # Hide Home and login from sidebar
+    last = st.session_state.get("last_page", "pages/0_Dashboard.py")
+    st.write(f"Redirecting to: {last}")
+    time.sleep(1)  # See the message before redirect
+    st.markdown("""
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h2>🔄 Loading...</h2>
+        </div>
+    """, unsafe_allow_html=True)
+    st.switch_page(last)
+    # 
+    st.markdown("""
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h2>🔄 Loading...</h2>
+        </div>
+    """, unsafe_allow_html=True)
 else:
-    st.subheader("Login to Your Account")
-    with st.form("login_form"):
-        u = st.text_input("Username")
-        p = st.text_input("Password", type="password")
-        submitted = st.form_submit_button("Login")
-
-    if submitted:
-        user = login_user(u, p)
-        if user:
-            # Update session
-            st.session_state.logged_in = True
-            st.session_state.username = user["username"]
-            st.session_state.user_id = user["id"]
-
-            # Create DB session + cookie
-            tok = create_session(user_id=user["id"])
-            cm.set("nscp_auth_token", tok, max_age=60 * 60 * 24 * 7, path="/")
-            # cm.save() 
-            time.sleep(0.5)
-            st.rerun()
-
-        else:
-            st.error("Invalid username or password")
+    st.markdown("""
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h2>🔄 Loading...</h2>
+        </div>
+    """, unsafe_allow_html=True)
+    # Redirect to login
+    # st.write("DEBUG - Redirecting to login")
+    time.sleep(1)
+    st.switch_page("pages/login.py")
