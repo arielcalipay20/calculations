@@ -21,28 +21,3 @@ def show_register():
                 st.success("User registered successfully! You can now login.")
             else:
                 st.error("Username already exists!")
-
-def show_login():
-    """
-    Renders the login form.
-    Returns:
-        dict | None:
-            On success -> {"id": <int>, "username": <str>}
-            On failure/idle -> None
-    """
-    st.subheader("🔐 Login to Your Account")
-
-    with st.form("login_form"):
-        username = st.text_input("Username", key="login_username_input")
-        password = st.text_input("Password", type="password", key="login_password_input")
-        submitted = st.form_submit_button("Login")
-
-    if not submitted:
-        return None
-
-    user = login_user(username, password)  # should return dict (id, username) or None
-    if user:
-        return user
-    else:
-        st.error("Incorrect Username or Password")
-        return None
